@@ -8,13 +8,9 @@ interface IV8S {
 
     struct Request {
         bytes data;
-        uint projectId;
+        uint256 projectId;
         bool hasResponse;
-    }
-
-    struct Response {
         bytes responseData;
-        uint requestId;
     }
 
     function projects(uint projectId) external view returns (string memory);

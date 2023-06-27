@@ -20,36 +20,13 @@ async function getRequest(requestId) {
   const request = await contract.getRequest(requestId);
   const projectId = request[1];
   const url = await getProjectUrl(projectId);
-  const inputParameters = hexStringToJson(request[0]);
+  const inputParameters = request[0];
   return { url, inputParameters };
 }
 
 async function getProjectUrl(projectId) {
   const url = await contract.projects(projectId);
   return url;
-}
-
-function hexStringToJson(hexString) {
-  const bytes = [];
-
-  for (let i = 2; i < hexString.length; i += 2) {
-    bytes.push(parseInt(hexString.substr(i, 2), 16));
-  }
-
-  const jsonString = new TextDecoder().decode(new Uint8Array(bytes));
-  return JSON.parse(jsonString);
-}
-
-function jsonToHexString(jsonObject) {
-  const jsonString = JSON.stringify(jsonObject);
-  const byteArray = new TextEncoder().encode(jsonString);
-
-  let hexString = "0x";
-  for (let i = 0; i < byteArray.length; i++) {
-    hexString += byteArray[i].toString(16).padStart(2, "0");
-  }
-
-  return hexString;
 }
 
 async function addResponse(requestId, responseData) {
@@ -79,9 +56,7 @@ async function fetchRequest() {
       };
 
       const response = await fetch(V8_URL, options);
-      let responseData = await response.json();
-
-      responseData = jsonToHexString(responseData);
+      let responseData = "0x1" // await response.json();
 
       await addResponse(unrespondedRequest, responseData);
     }
