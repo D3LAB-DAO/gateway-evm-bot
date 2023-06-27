@@ -18,9 +18,9 @@ async function getUnrespondedRequests() {
 
 async function getRequest(requestId) {
   const request = await contract.getRequest(requestId);
-  const projectId = request[1];
+  const projectId = request[0];
   const url = await getProjectUrl(projectId);
-  const inputParameters = request[0];
+  const inputParameters = request[1];
   return { url, inputParameters };
 }
 
@@ -45,7 +45,7 @@ async function fetchRequest() {
     const { url, inputParameters } = await getRequest(unrespondedRequest);
     console.log(url, inputParameters)
 
-    if (unrespondedRequests.length > 0) {
+    if (unrespondedRequests) {
       const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,7 +56,7 @@ async function fetchRequest() {
       };
 
       const response = await fetch(V8_URL, options);
-      let responseData = "0x1" // await response.json();
+      let responseData = "0x00" // await response.json();
 
       await addResponse(unrespondedRequest, responseData);
     }
